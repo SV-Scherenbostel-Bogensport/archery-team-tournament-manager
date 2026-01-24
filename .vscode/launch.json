@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "name": "🚀 App: Vollständig (Dev)",
+            "request": "launch",
+            "command": "pnpm run dev",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "📦 App: Preview (Produktionstest)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "pnpm build && pnpm preview",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
