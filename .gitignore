@@ -1,0 +1,29 @@
+# Build & Output
+out/
+dist/
+node_modules/
+
+# local env files
+.env
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.vite/
+.eslintcache
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+!.vscode/extensions.json
+.DS_Store
+thumbs.db
