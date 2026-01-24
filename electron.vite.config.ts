@@ -22,9 +22,13 @@ export default defineConfig({
     },
     plugins: [
       VueRouter({
+        routesFolder: resolve(__dirname, 'src/renderer/pages'),
         dts: resolve(__dirname, 'src/renderer/typed-router.d.ts'),
       }),
-      Layouts(),
+      Layouts({
+        layoutsDirs: 'src/renderer/layouts',
+        defaultLayout: 'default',
+      }),
       AutoImport({
         imports: [
           'vue',
@@ -34,6 +38,7 @@ export default defineConfig({
         dts: resolve(__dirname, 'src/renderer/auto-imports.d.ts'),
       }),
       Components({
+        dirs: [resolve(__dirname, 'src/renderer/components')],
         dts: resolve(__dirname, 'src/renderer/components.d.ts'),
       }),
       tailwindcss(),
