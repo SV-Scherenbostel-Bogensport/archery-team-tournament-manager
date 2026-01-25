@@ -15,6 +15,10 @@ export default defineConfig({
   preload: {},
   renderer: {
     root: resolve(__dirname, 'src/renderer'),
+    server: {
+      host: true,
+      port: 5173,
+    },
     resolve: {
       alias: {
         '@': resolve(__dirname, 'src/renderer'),

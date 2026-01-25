@@ -6,14 +6,20 @@
 
 // Composables
 import { createVuetify } from 'vuetify'
+import { myDarkTheme, myLightTheme } from '@/theme'
 
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 
-// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+const savedTheme = localStorage.getItem('user-theme') || 'myLightTheme'
+
 export default createVuetify({
   theme: {
-    defaultTheme: 'system',
+    defaultTheme: savedTheme,
+    themes: {
+      myLightTheme,
+      myDarkTheme,
+    },
   },
 })

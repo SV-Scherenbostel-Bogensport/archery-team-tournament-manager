@@ -19,6 +19,14 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/control': RouteRecordInfo<'/control', '/control', Record<never, never>, Record<never, never>>,
+    '/dashboard': RouteRecordInfo<'/dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
+    '/evaluation/entry': RouteRecordInfo<'/evaluation/entry', '/evaluation/entry', Record<never, never>, Record<never, never>>,
+    '/evaluation/sheets': RouteRecordInfo<'/evaluation/sheets', '/evaluation/sheets', Record<never, never>, Record<never, never>>,
+    '/replication': RouteRecordInfo<'/replication', '/replication', Record<never, never>, Record<never, never>>,
+    '/settings/parameters': RouteRecordInfo<'/settings/parameters', '/settings/parameters', Record<never, never>, Record<never, never>>,
+    '/settings/schedule': RouteRecordInfo<'/settings/schedule', '/settings/schedule', Record<never, never>, Record<never, never>>,
+    '/settings/teams': RouteRecordInfo<'/settings/teams', '/settings/teams', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -34,6 +42,38 @@ declare module 'vue-router/auto-routes' {
   export interface _RouteFileInfoMap {
     'src/renderer/pages/index.vue': {
       routes: '/'
+      views: never
+    }
+    'src/renderer/pages/control.vue': {
+      routes: '/control'
+      views: never
+    }
+    'src/renderer/pages/dashboard.vue': {
+      routes: '/dashboard'
+      views: never
+    }
+    'src/renderer/pages/evaluation/entry.vue': {
+      routes: '/evaluation/entry'
+      views: never
+    }
+    'src/renderer/pages/evaluation/sheets.vue': {
+      routes: '/evaluation/sheets'
+      views: never
+    }
+    'src/renderer/pages/replication.vue': {
+      routes: '/replication'
+      views: never
+    }
+    'src/renderer/pages/settings/parameters.vue': {
+      routes: '/settings/parameters'
+      views: never
+    }
+    'src/renderer/pages/settings/schedule.vue': {
+      routes: '/settings/schedule'
+      views: never
+    }
+    'src/renderer/pages/settings/teams.vue': {
+      routes: '/settings/teams'
       views: never
     }
   }
