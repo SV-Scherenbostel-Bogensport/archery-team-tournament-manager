@@ -26,7 +26,8 @@ export default defineConfig({
         dts: resolve(__dirname, 'src/renderer/typed-router.d.ts'),
       }),
       Layouts({
-        layoutsDirs: 'src/renderer/layouts',
+        layoutsDirs: resolve(__dirname, 'src/renderer/layouts'),
+        pagesDirs: resolve(__dirname, 'src/renderer/pages'),
         defaultLayout: 'default',
       }),
       AutoImport({
