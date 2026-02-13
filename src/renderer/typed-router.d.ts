@@ -19,14 +19,14 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    '/control': RouteRecordInfo<'/control', '/control', Record<never, never>, Record<never, never>>,
-    '/dashboard': RouteRecordInfo<'/dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
-    '/evaluation/entry': RouteRecordInfo<'/evaluation/entry', '/evaluation/entry', Record<never, never>, Record<never, never>>,
-    '/evaluation/sheets': RouteRecordInfo<'/evaluation/sheets', '/evaluation/sheets', Record<never, never>, Record<never, never>>,
-    '/replication': RouteRecordInfo<'/replication', '/replication', Record<never, never>, Record<never, never>>,
-    '/settings/parameters': RouteRecordInfo<'/settings/parameters', '/settings/parameters', Record<never, never>, Record<never, never>>,
-    '/settings/schedule': RouteRecordInfo<'/settings/schedule', '/settings/schedule', Record<never, never>, Record<never, never>>,
-    '/settings/teams': RouteRecordInfo<'/settings/teams', '/settings/teams', Record<never, never>, Record<never, never>>,
+    '/tournament/[id]/control': RouteRecordInfo<'/tournament/[id]/control', '/tournament/:id/control', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/[id]/dashboard': RouteRecordInfo<'/tournament/[id]/dashboard', '/tournament/:id/dashboard', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/[id]/evaluation/entry': RouteRecordInfo<'/tournament/[id]/evaluation/entry', '/tournament/:id/evaluation/entry', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/[id]/evaluation/sheets': RouteRecordInfo<'/tournament/[id]/evaluation/sheets', '/tournament/:id/evaluation/sheets', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/[id]/replication': RouteRecordInfo<'/tournament/[id]/replication', '/tournament/:id/replication', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/[id]/settings/parameters': RouteRecordInfo<'/tournament/[id]/settings/parameters', '/tournament/:id/settings/parameters', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/[id]/settings/schedule': RouteRecordInfo<'/tournament/[id]/settings/schedule', '/tournament/:id/settings/schedule', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/[id]/settings/teams': RouteRecordInfo<'/tournament/[id]/settings/teams', '/tournament/:id/settings/teams', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }
 
   /**
@@ -44,36 +44,36 @@ declare module 'vue-router/auto-routes' {
       routes: '/'
       views: never
     }
-    'src/renderer/pages/control.vue': {
-      routes: '/control'
+    'src/renderer/pages/tournament/[id]/control.vue': {
+      routes: '/tournament/[id]/control'
       views: never
     }
-    'src/renderer/pages/dashboard.vue': {
-      routes: '/dashboard'
+    'src/renderer/pages/tournament/[id]/dashboard.vue': {
+      routes: '/tournament/[id]/dashboard'
       views: never
     }
-    'src/renderer/pages/evaluation/entry.vue': {
-      routes: '/evaluation/entry'
+    'src/renderer/pages/tournament/[id]/evaluation/entry.vue': {
+      routes: '/tournament/[id]/evaluation/entry'
       views: never
     }
-    'src/renderer/pages/evaluation/sheets.vue': {
-      routes: '/evaluation/sheets'
+    'src/renderer/pages/tournament/[id]/evaluation/sheets.vue': {
+      routes: '/tournament/[id]/evaluation/sheets'
       views: never
     }
-    'src/renderer/pages/replication.vue': {
-      routes: '/replication'
+    'src/renderer/pages/tournament/[id]/replication.vue': {
+      routes: '/tournament/[id]/replication'
       views: never
     }
-    'src/renderer/pages/settings/parameters.vue': {
-      routes: '/settings/parameters'
+    'src/renderer/pages/tournament/[id]/settings/parameters.vue': {
+      routes: '/tournament/[id]/settings/parameters'
       views: never
     }
-    'src/renderer/pages/settings/schedule.vue': {
-      routes: '/settings/schedule'
+    'src/renderer/pages/tournament/[id]/settings/schedule.vue': {
+      routes: '/tournament/[id]/settings/schedule'
       views: never
     }
-    'src/renderer/pages/settings/teams.vue': {
-      routes: '/settings/teams'
+    'src/renderer/pages/tournament/[id]/settings/teams.vue': {
+      routes: '/tournament/[id]/settings/teams'
       views: never
     }
   }

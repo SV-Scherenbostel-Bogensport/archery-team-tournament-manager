@@ -9,11 +9,15 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 import Layouts from 'vite-plugin-vue-layouts-next'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import pkg from './package.json'
 
 export default defineConfig({
   main: {},
   preload: {},
   renderer: {
+    define: {
+      'import.meta.env.VERSION': JSON.stringify(pkg.version),
+    },
     root: resolve(__dirname, 'src/renderer'),
     server: {
       host: true,

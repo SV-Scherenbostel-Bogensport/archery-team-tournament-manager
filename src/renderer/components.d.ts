@@ -18,5 +18,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     TheHeader: typeof import('./components/TheHeader.vue')['default']
     TheNavigation: typeof import('./components/TheNavigation.vue')['default']
+    TournamentCard: typeof import('./components/TournamentCard.vue')['default']
   }
 }

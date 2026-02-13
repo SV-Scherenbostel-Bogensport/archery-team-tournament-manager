@@ -1,5 +1,5 @@
 <template>
-  <h1>Entry</h1>
+  <h1>"Ablauf" links klickbar</h1>
 </template>
 
 <script lang="ts" setup>
