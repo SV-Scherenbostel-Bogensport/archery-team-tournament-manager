@@ -82,12 +82,12 @@
   defineEmits(['next'])
 
   const competitionModes = [
-    {
-      value: 'liga-dsb',
-      label: 'Liga DSB',
-      icon: 'mdi-tournament',
-      description: 'Offizieller Ligabetrieb nach DSB-Regelwerk. Geeignet für Verbandswettbewerbe.',
-    },
+    // {
+    //   value: 'liga-dsb',
+    //   label: 'Liga DSB',
+    //   icon: 'mdi-tournament',
+    //   description: 'Offizieller Ligabetrieb nach DSB-Regelwerk. Geeignet für Verbandswettbewerbe.',
+    // },
     {
       value: 'wedemark-team-open',
       label: 'Wedemark-Team-Open',
