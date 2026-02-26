@@ -27,6 +27,7 @@ declare module 'vue-router/auto-routes' {
     '/tournament/[id]/settings/parameters': RouteRecordInfo<'/tournament/[id]/settings/parameters', '/tournament/:id/settings/parameters', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/tournament/[id]/settings/schedule': RouteRecordInfo<'/tournament/[id]/settings/schedule', '/tournament/:id/settings/schedule', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/tournament/[id]/settings/teams': RouteRecordInfo<'/tournament/[id]/settings/teams', '/tournament/:id/settings/teams', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/tournament/new': RouteRecordInfo<'/tournament/new', '/tournament/new', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -74,6 +75,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/renderer/pages/tournament/[id]/settings/teams.vue': {
       routes: '/tournament/[id]/settings/teams'
+      views: never
+    }
+    'src/renderer/pages/tournament/new.vue': {
+      routes: '/tournament/new'
       views: never
     }
   }

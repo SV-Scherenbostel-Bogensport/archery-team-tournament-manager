@@ -6,6 +6,7 @@
 
 // Composables
 import { createVuetify } from 'vuetify'
+import { de } from 'vuetify/locale'
 import { myDarkTheme, myLightTheme } from '@/theme'
 
 // Styles
@@ -21,5 +22,10 @@ export default createVuetify({
       myLightTheme,
       myDarkTheme,
     },
+  },
+  locale: {
+    locale: 'de',
+    fallback: 'en',
+    messages: { de },
   },
 })

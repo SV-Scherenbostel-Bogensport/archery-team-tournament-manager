@@ -6,7 +6,7 @@
           <h1 class="text-h4 font-weight-black">Turnier-Verwaltung</h1>
         </v-col>
         <v-col cols="auto">
-          <v-btn color="primary" prepend-icon="mdi-plus" size="large" @click="showCreateDialog = true">
+          <v-btn color="primary" prepend-icon="mdi-plus" size="large" :to="`tournament/new`">
             Neues Turnier
           </v-btn>
         </v-col>
@@ -35,38 +35,6 @@
       </v-alert>
     </div>
 
-    <v-dialog v-model="showCreateDialog" max-width="500px" persistent>
-      <v-card rounded="xl">
-        <v-card-title class="pa-6 text-h5">Neues Turnier anlegen</v-card-title>
-        <v-card-text class="pa-6 pt-0">
-          <v-text-field
-            v-model="newTournament.name"
-            label="Turniername"
-            placeholder="z.B. Scherenbostel Open"
-            prepend-inner-icon="mdi-trophy-outline"
-            variant="outlined"
-          />
-          <v-text-field
-            v-model="newTournament.location"
-            label="Austragungsort"
-            prepend-inner-icon="mdi-map-marker-outline"
-            variant="outlined"
-          />
-          <v-text-field
-            v-model="newTournament.date"
-            label="Datum"
-            prepend-inner-icon="mdi-calendar"
-            type="date"
-            variant="outlined"
-          />
-        </v-card-text>
-        <v-card-actions class="pa-6">
-          <v-spacer />
-          <v-btn variant="text" @click="showCreateDialog = false">Abbrechen</v-btn>
-          <v-btn color="primary" rounded="lg" variant="elevated" @click="addTournament">Speichern</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
@@ -82,16 +50,10 @@
   const showCreateDialog = ref(false)
   const tournaments = ref<any[]>([])
 
-  const newTournament = ref({
-    name: '',
-    location: 'Scherenbostel',
-    date: new Date().toISOString().slice(0, 10),
-  })
-
   async function connectToBackend () {
     try {
       // Simulation des Verbindungsaufbaus
-      await new Promise(resolve => setTimeout(resolve, 1))
+      await new Promise(resolve => setTimeout(resolve, 100))
       isConnected.value = true
       loadTournaments()
     } catch (error) {
@@ -123,21 +85,6 @@
         banner: 'https://images.unsplash.com/photo-1580130718746-9f68744005f9?q=80&w=1000',
       },
     ]
-  }
-
-  function addTournament () {
-    if (newTournament.value.name) {
-      const id = tournaments.value.length + 1
-      tournaments.value.push({
-        id,
-        ...newTournament.value,
-        status: 'geplant',
-        currentParticipants: 0,
-        maxParticipants: 100,
-      })
-      showCreateDialog.value = false
-      newTournament.value.name = ''
-    }
   }
 
   function navigateToTournament (id: number) {

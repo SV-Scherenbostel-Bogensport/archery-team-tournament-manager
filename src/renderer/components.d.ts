@@ -13,11 +13,14 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     Header: typeof import('./components/Header.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheHeader: typeof import('./components/TheHeader.vue')['default']
     TheNavigation: typeof import('./components/TheNavigation.vue')['default']
     TournamentCard: typeof import('./components/TournamentCard.vue')['default']
+    TournamentCreationOverview: typeof import('./components/tournament/TournamentCreationOverview.vue')['default']
+    TournamentGeneralDataEdit: typeof import('./components/tournament/TournamentGeneralDataEdit.vue')['default']
+    TournamentModeSelection: typeof import('./components/tournament/TournamentModeSelection.vue')['default']
+    TournamentTeamEdit: typeof import('./components/tournament/TournamentTeamEdit.vue')['default']
   }
 }

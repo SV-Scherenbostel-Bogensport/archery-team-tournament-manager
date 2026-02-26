@@ -14,7 +14,7 @@
   </v-snackbar>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
   import { useLoadingStore } from '@/stores/loading'
   const loadingStore = useLoadingStore()
 </script>

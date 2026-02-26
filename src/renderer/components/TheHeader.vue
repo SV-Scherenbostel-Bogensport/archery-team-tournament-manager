@@ -3,7 +3,7 @@
     <v-app-bar-title class="text-no-wrap">
       <div class="d-flex align-center">
         <span class="font-weight-bold">
-          Tournament Manager
+          Team Tournament Manager
         </span>
 
         <span
