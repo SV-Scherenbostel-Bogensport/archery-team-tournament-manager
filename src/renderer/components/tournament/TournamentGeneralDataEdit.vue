@@ -81,10 +81,9 @@
                   v-bind="props"
                   clearable
                   color="secondary"
-                  label="Startzeit *"
+                  label="Startzeit"
                   prepend-inner-icon="mdi-clock-outline"
                   readonly
-                  :rules="[rules.required]"
                   variant="outlined"
                 />
               </template>
