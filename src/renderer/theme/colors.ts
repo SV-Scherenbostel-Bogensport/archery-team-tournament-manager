@@ -12,7 +12,6 @@ export const lightColors = {
   ...brandColors,
   background: '#F5F5F5',
   surface: '#FAFAFA',
-
 }
 
 export const darkColors = {

@@ -81,6 +81,8 @@
 
   defineEmits(['next'])
 
+  store.competition.mode = 'wedemark-team-open'
+
   const competitionModes = [
     // {
     //   value: 'liga-dsb',

@@ -2,258 +2,238 @@
   <v-card class="pa-2" color="transparent" flat>
     <v-card-text class="pa-0">
 
-      <v-row no-gutters style="min-height: 520px;">
+      <v-row>
 
         <!-- ===== LINKE SEITE: Teams ===== -->
-        <v-col class="border-e" cols="12" md="4">
-          <div class="pa-4">
-            <h3 class="text-h6 mb-4 text-secondary d-flex align-center">
+        <v-col cols="12" md="6">
+          <v-card color="background" elevation="1" rounded="lg" variant="tonal">
+            <v-card-title class="text-h6 text-secondary d-flex align-center justify-space-between">
               Teams
-            </h3>
-
-            <!-- Team hinzufügen -->
-            <v-text-field
-              v-model="newTeamName"
-              clearable
-              color="secondary"
-              density="comfortable"
-              label="Teamname"
-              prepend-inner-icon="mdi-account-group"
-              variant="outlined"
-              @keyup.enter="addTeam"
-            >
-              <template #append-inner>
-                <v-btn
-                  color="secondary"
-                  density="comfortable"
-                  :disabled="!newTeamName.trim()"
-                  icon="mdi-plus"
-                  variant="tonal"
-                  @click="addTeam"
-                />
-              </template>
-            </v-text-field>
-
-            <!-- Team-Liste leer -->
-            <div v-if="store.teamsWithMembers.length === 0" class="text-center text-medium-emphasis text-caption mt-6">
-              <v-icon class="mb-2 d-block mx-auto" icon="mdi-account-group-outline" size="40" />
-              Noch keine Teams vorhanden.
-            </div>
-
-            <v-list v-else class="pa-0" lines="two">
-              <v-list-item
-                v-for="(team, index) in store.teamsWithMembers"
-                :key="team.localId"
-                :active="selectedTeamIndex === index"
-                active-color="secondary"
-                class="rounded-lg mb-1 team-item"
-                :class="selectedTeamIndex === index ? 'team-item--active' : ''"
-                :prepend-icon="selectedTeamIndex === index ? 'mdi-account-group' : 'mdi-account-group-outline'"
-                :title="team.name!"
-                @click="selectedTeamIndex = index"
-              >
-                <template #subtitle>
-                  <span>{{ team.members.length }} Schütze(n)</span>
-                  <span v-if="team.teamMemberCount" class="text-medium-emphasis">
-                    &nbsp;/ {{ team.teamMemberCount }} erwartet
-                  </span>
+              <v-tooltip location="left">
+                <template #activator="{ props }">
+                  <v-btn
+                    class="translate-x-2"
+                    v-bind="props"
+                    color="secondary"
+                    icon="mdi-plus-circle-outline"
+                    variant="text"
+                  />
                 </template>
-                <template #append>
-                  <div class="d-flex flex-column">
-                    <v-btn
-                      color="secondary"
-                      density="compact"
-                      icon="mdi-pencil-outline"
-                      size="small"
-                      variant="text"
-                      @click.stop="openTeamEdit(index)"
-                    />
-                    <v-btn
-                      color="error"
-                      density="compact"
-                      icon="mdi-delete-outline"
-                      size="small"
-                      variant="text"
-                      @click.stop="removeTeam(index)"
-                    />
+                <template #default>
+                  Neues Team hinzufügen
+                  <v-icon class="ml-2" size="small">mdi-account-multiple-plus</v-icon>
+                </template>
+              </v-tooltip>
+            </v-card-title>
+
+            <div style="max-height: 50vh; overflow-y: auto;">
+              <div class="d-flex flex-column ga-2 pa-3">
+                <v-card
+                  v-for="(team, index) in teams"
+                  :key="team.id"
+                  :class="['team-card cursor-pointer transition-swing pa-1', { selected: selectedTeam?.id === team.id }]"
+                  :color="selectedTeam?.id === team.id ? 'secondary' : 'background'"
+                  :elevation="selectedTeam?.id === team.id ? 1 : 0"
+                  hover
+                  style="cursor: pointer;"
+                  :variant="selectedTeam?.id === team.id ? 'tonal' : 'elevated'"
+                  @click="selectedTeam = selectedTeam?.id === team.id ? null : team"
+                >
+                  <div class="d-flex align-center">
+                    <!-- Nr -->
+                    <v-tooltip location="top" :text="team.id.toString()">
+                      <template #activator="{ props }">
+                        <span v-bind="props" class="text-secondary text-body-2 mx-4" style="min-width: 24px;">
+                          #{{ index + 1 }}
+                        </span>
+                      </template>
+                    </v-tooltip>
+
+                    <!-- Teamname -->
+                    <span class="text-body-1 grow" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">
+                      {{ team.name }}
+                    </span>
+
+                    <!-- Icons -->
+                    <div class="d-flex align-center ga-1 ml-8">
+
+                      <!-- Schützenanzahl -->
+                      <v-tooltip location="top" :text="team.members.length + 'x Registrierte Schützen (voraus. 5)'">
+                        <template #activator="{ props }">
+                          <span v-bind="props" class="whitespace-nowrap text-grey-darken-1" style="cursor: default;">
+                            {{ team.members.length }}x <v-icon color="grey-darken-1" size="small">mdi-account-group-outline</v-icon>
+                          </span>
+                        </template>
+                      </v-tooltip>
+
+                      <!-- E-Mail -->
+                      <v-tooltip location="top">
+                        <template #activator="{ props }">
+                          <v-btn
+                            v-bind="props"
+                            class="ml-1 mr-4"
+                            color="grey-darken-1"
+                            icon="mdi-email-edit-outline"
+                            size="small"
+                            variant="text"
+                            @click.stop="team.contactEmail && openMail(team.contactEmail)"
+                          />
+                        </template>
+                        <template #default>
+                          <div>E-Mail verfassen</div>
+                          <div>
+                            {{ team.contactEmail }}
+                            <v-icon class="ml-2" size="small">mdi-arrow-top-right</v-icon>
+                          </div>
+                        </template>
+                      </v-tooltip>
+
+                      <!-- Startgeldinfo -->
+                      <v-tooltip location="top" :text="team.tournamentRegistration.paymentDate ? 'Startgeld bezahlt' : 'Startgeld nicht bezahlt'">
+                        <template #activator="{ props }">
+                          <v-btn
+                            v-bind="props"
+                            :color="team.tournamentRegistration.paymentDate ? 'success' : 'error'"
+                            :icon="team.tournamentRegistration.paymentDate ? 'mdi-currency-eur' : 'mdi-currency-eur-off'"
+                            size="small"
+                            style="transition: color 0.3s ease;"
+                            variant="text"
+                            @click.stop="team.tournamentRegistration.paymentDate = team.tournamentRegistration.paymentDate ? null : new Date().toISOString()"
+                          />
+                        </template>
+                      </v-tooltip>
+
+                      <!-- Anmeldung -->
+                      <v-tooltip location="top" :text="team.tournamentRegistration.arrivalDate ? 'Angemeldet' : 'Nicht angemeldet'">
+                        <template #activator="{ props }">
+                          <v-btn
+                            v-bind="props"
+                            class="mr-4"
+                            :color="team.tournamentRegistration.arrivalDate ? 'success' : 'grey-darken-1'"
+                            :icon="team.tournamentRegistration.arrivalDate ? 'mdi-check-circle' : 'mdi-close-circle'"
+                            size="small"
+                            style="transition: color 0.3s ease;"
+                            variant="text"
+                            @click.stop="team.tournamentRegistration.arrivalDate = team.tournamentRegistration.arrivalDate ? null : new Date().toISOString()"
+                          />
+                        </template>
+                      </v-tooltip>
+
+                      <!-- Bearbeiten -->
+                      <v-tooltip location="top" text="Bearbeiten">
+                        <template #activator="{ props }">
+                          <v-btn
+                            v-bind="props"
+                            color="grey-darken-1"
+                            icon="mdi-pencil-outline"
+                            size="small"
+                            variant="text"
+                          />
+                        </template>
+                      </v-tooltip>
+
+                      <!-- Löschen -->
+                      <v-tooltip location="top" text="Löschen">
+                        <template #activator="{ props }">
+                          <v-btn
+                            v-bind="props"
+                            class="mr-4"
+                            color="error"
+                            icon="mdi-delete-outline"
+                            size="small"
+                            variant="text"
+                          />
+                        </template>
+                      </v-tooltip>
+
+                      <!-- Anzeigen -->
+                      <v-btn
+                        color="secondary"
+                        icon="mdi-arrow-top-right"
+                        size="small"
+                        variant="text"
+                      />
+
+                    </div>
                   </div>
-                </template>
-              </v-list-item>
-            </v-list>
-          </div>
+                </v-card>
+              </div>
+            </div>
+          </v-card>
         </v-col>
 
         <!-- ===== RECHTE SEITE: Schützen ===== -->
-        <v-col cols="12" md="8">
-          <div class="pa-4">
-
-            <!-- Kein Team ausgewählt -->
-            <div
-              v-if="selectedTeamIndex === null"
-              class="d-flex flex-column align-center justify-center text-center text-medium-emphasis mt-10"
+        <v-col cols="12" md="6">
+          <v-expand-x-transition>
+            <v-card
+              v-if="selectedTeam"
+              color="background"
+              elevation="1"
+              rounded="lg"
+              style="min-height: 100%;"
+              variant="tonal"
             >
-              <v-icon class="mb-3 text-secondary" icon="mdi-cursor-pointer" size="48" />
-              <div class="text-subtitle-1 font-weight-medium">Team auswählen</div>
-              <div class="text-caption mt-1">Klicke links auf ein Team, um Schützen zu verwalten.</div>
-            </div>
+              <v-card-title class="text-h6 text-secondary d-flex align-center justify-space-between">
+                {{ selectedTeam.name }}
+                <v-tooltip location="left">
+                  <template #activator="{ props }">
+                    <v-btn
+                      class="translate-x-2"
+                      v-bind="props"
+                      color="secondary"
+                      icon="mdi-plus-circle-outline"
+                      variant="text"
+                    />
+                  </template>
+                  <template #default>
+                    Schützen hinzufügen
+                    <v-icon class="ml-2" size="small">mdi-account-plus</v-icon>
+                  </template>
+                </v-tooltip>
+              </v-card-title>
 
-            <!-- Team ausgewählt -->
-            <template v-else>
-              <div class="d-flex align-center justify-space-between mb-4">
-                <h3 class="text-h6 text-secondary d-flex align-center ga-2">
-                  <v-icon icon="mdi-bow-arrow" />
-                  Schützen – {{ selectedTeam?.name }}
-                </h3>
-                <v-chip
-                  v-if="selectedTeam?.contactEmail"
-                  color="secondary"
-                  density="compact"
-                  prepend-icon="mdi-email-outline"
-                  variant="tonal"
-                >
-                  {{ selectedTeam.contactEmail }}
-                </v-chip>
+              <div style="max-height: 50vh; overflow-y: auto;">
+                <div class="d-flex flex-column ga-2 pa-3">
+                  <v-card
+                    v-for="(schuetze, i) in selectedTeam.members ?? []"
+                    :key="i"
+                    class="pa-1 team-card"
+                    color="background"
+                    hover
+                    style="cursor: pointer;"
+                    variant="outlined"
+                  >
+                    <div class="d-flex align-center px-2">
+                      <span class="text-secondary text-body-2 mr-4">#{{ i + 1 }}</span>
+                      <span class="text-body-1 grow">#{{ schuetze.number }} {{ schuetze.firstName }} {{ schuetze.lastName }}</span>
+                    </div>
+                  </v-card>
+
+                  <v-card v-if="!selectedTeam.members?.length" class="pa-3" color="background" variant="outlined">
+                    <div class="text-body-2 text-medium-emphasis text-center">
+                      Keine Schützen eingetragen
+                    </div>
+                  </v-card>
+                </div>
               </div>
+            </v-card>
 
-              <!-- Schütze hinzufügen -->
-              <v-row class="mb-2" dense>
-                <v-col cols="3">
-                  <v-text-field
-                    v-model="newArcher.number"
-                    color="secondary"
-                    density="comfortable"
-                    label="Startnr."
-                    prepend-inner-icon="mdi-pound"
-                    type="number"
-                    variant="outlined"
-                  />
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field
-                    v-model="newArcher.firstName"
-                    color="secondary"
-                    density="comfortable"
-                    label="Vorname"
-                    variant="outlined"
-                  />
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field
-                    v-model="newArcher.lastName"
-                    color="secondary"
-                    density="comfortable"
-                    label="Nachname"
-                    variant="outlined"
-                    @keyup.enter="addArcher"
-                  />
-                </v-col>
-                <v-col class="d-flex align-center" cols="1">
-                  <v-btn
-                    color="secondary"
-                    :disabled="!canAddArcher"
-                    icon="mdi-plus"
-                    variant="tonal"
-                    @click="addArcher"
-                  />
-                </v-col>
-              </v-row>
-
-              <!-- Schützen-Liste leer -->
-              <div v-if="!selectedTeam?.members.length" class="text-center text-medium-emphasis text-caption mt-6">
-                <v-icon class="mb-2 d-block mx-auto" icon="mdi-bow-arrow" size="36" />
-                Noch keine Schützen in diesem Team.
+            <v-card
+              v-else
+              color="background"
+              elevation="0"
+              rounded="lg"
+              style="min-height: 100%; border-style: dashed;"
+              variant="outlined"
+            >
+              <div class="d-flex align-center justify-center" style="min-height: 200px;">
+                <div class="text-center text-medium-emphasis">
+                  <v-icon class="mb-2" size="48">mdi-account-group-outline</v-icon>
+                  <div class="text-body-2">Team auswählen um Schützen zu sehen</div>
+                </div>
               </div>
-
-              <v-table v-else class="rounded-lg border" density="compact">
-                <thead>
-                  <tr>
-                    <th class="text-left" style="width: 80px;">Startnr.</th>
-                    <th class="text-left">Vorname</th>
-                    <th class="text-left">Nachname</th>
-                    <th style="width: 100px;" />
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(archer, aIndex) in selectedTeam.members" :key="archer.id">
-                    <td>
-                      <v-text-field
-                        v-if="editingIndex === aIndex"
-                        v-model="editBuffer.number"
-                        color="secondary"
-                        density="compact"
-                        hide-details
-                        style="min-width: 60px;"
-                        type="number"
-                        variant="plain"
-                      />
-                      <span v-else class="text-medium-emphasis">#{{ archer.number }}</span>
-                    </td>
-                    <td>
-                      <v-text-field
-                        v-if="editingIndex === aIndex"
-                        v-model="editBuffer.firstName"
-                        color="secondary"
-                        density="compact"
-                        hide-details
-                        variant="plain"
-                      />
-                      <span v-else>{{ archer.firstName }}</span>
-                    </td>
-                    <td>
-                      <v-text-field
-                        v-if="editingIndex === aIndex"
-                        v-model="editBuffer.lastName"
-                        color="secondary"
-                        density="compact"
-                        hide-details
-                        variant="plain"
-                      />
-                      <span v-else>{{ archer.lastName }}</span>
-                    </td>
-                    <td class="text-right">
-                      <template v-if="editingIndex === aIndex">
-                        <v-btn
-                          color="success"
-                          density="compact"
-                          icon="mdi-check"
-                          size="small"
-                          variant="text"
-                          @click="saveEdit(aIndex)"
-                        />
-                        <v-btn
-                          color="grey"
-                          density="compact"
-                          icon="mdi-close"
-                          size="small"
-                          variant="text"
-                          @click="editingIndex = null"
-                        />
-                      </template>
-                      <template v-else>
-                        <v-btn
-                          color="secondary"
-                          density="compact"
-                          icon="mdi-pencil-outline"
-                          size="small"
-                          variant="text"
-                          @click="startEdit(aIndex, archer)"
-                        />
-                        <v-btn
-                          color="error"
-                          density="compact"
-                          icon="mdi-delete-outline"
-                          size="small"
-                          variant="text"
-                          @click="removeArcher(aIndex)"
-                        />
-                      </template>
-                    </td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </template>
-
-          </div>
+            </v-card>
+          </v-expand-x-transition>
         </v-col>
 
       </v-row>
@@ -262,8 +242,8 @@
   </v-card>
 
   <!-- ===== Team bearbeiten Dialog ===== -->
-  <v-dialog v-model="teamEditDialog" max-width="480" persistent>
-    <v-card rounded="lg">
+  <v-dialog max-width="480" persistent>
+    <v-card color="surface-bright" rounded="lg">
       <v-card-title class="d-flex align-center ga-2 pa-4 pb-2">
         <v-icon color="secondary" icon="mdi-account-group" />
         Team bearbeiten
@@ -273,7 +253,6 @@
         <v-row dense>
           <v-col cols="12">
             <v-text-field
-              v-model="teamEditBuffer.name"
               clearable
               color="secondary"
               label="Teamname *"
@@ -284,7 +263,6 @@
           </v-col>
           <v-col cols="12">
             <v-text-field
-              v-model="teamEditBuffer.contactEmail"
               clearable
               color="secondary"
               label="Kontakt E-Mail"
@@ -295,7 +273,6 @@
           </v-col>
           <v-col cols="12">
             <v-number-input
-              v-model="teamEditBuffer.teamMemberCount"
               clearable
               color="secondary"
               control-variant="default"
@@ -311,14 +288,12 @@
 
       <v-card-actions class="pa-4 pt-0">
         <v-spacer />
-        <v-btn color="grey" text="Abbrechen" variant="text" @click="teamEditDialog = false" />
+        <v-btn color="grey" text="Abbrechen" variant="text" />
         <v-btn
           color="secondary"
-          :disabled="!teamEditBuffer.name?.trim()"
           prepend-icon="mdi-check"
           text="Speichern"
           variant="tonal"
-          @click="saveTeamEdit"
         />
       </v-card-actions>
     </v-card>
@@ -326,145 +301,90 @@
 </template>
 
 <script setup lang="ts">
-  import type { TeamMember } from '@/types'
-  import { computed, ref } from 'vue'
-  import { useTournamentStore } from '@/stores/tournamentStore'
-
-  const store = useTournamentStore()
+  import type { TeamWithMembers } from '@/types'
+  import { ref } from 'vue'
 
   defineEmits(['next'])
   const isValid = ref(true)
   defineExpose({ isValid })
 
-  // ── Teams ──────────────────────────────────────────
-  const newTeamName = ref('')
-  const selectedTeamIndex = ref<number | null>(null)
+  const selectedTeam = ref<TeamWithMembers | null>(null)
 
-  const selectedTeam = computed(() =>
-    selectedTeamIndex.value === null
-      ? null
-      : store.teamsWithMembers[selectedTeamIndex.value],
-  )
-
-  function addTeam () {
-    const name = newTeamName.value.trim()
-    if (!name) return
-    store.teamsWithMembers.push({
-      localId: crypto.randomUUID(),
-      name,
-      contactEmail: undefined,
-      teamMemberCount: undefined,
+  const teams = reactive<TeamWithMembers[]>([
+    {
+      id: '1',
+      name: 'Team Alpha',
+      contactEmail: 'alpha@test.de',
+      teamMemberCount: 3,
+      tournamentRegistration: {
+        registrationDate: '2025-03-01',
+        paymentDate: '2025-03-05',
+        arrivalDate: '2025-03-05',
+      },
+      members: [
+        { id: '1', teamId: '1', number: 1, firstName: 'Max', lastName: 'Mustermann' },
+        { id: '2', teamId: '1', number: 2, firstName: 'Erika', lastName: 'Musterfrau' },
+        { id: '3', teamId: '1', number: 3, firstName: 'Hans', lastName: 'Schmidt' },
+      ],
+    },
+    {
+      id: '2',
+      name: 'Team Bravo',
+      contactEmail: 'bravo@test.de',
+      teamMemberCount: 2,
+      tournamentRegistration: {
+        registrationDate: '2025-03-02',
+        paymentDate: null,
+        arrivalDate: null,
+      },
+      members: [
+        { id: '4', teamId: '2', number: 1, firstName: 'Lisa', lastName: 'Meier' },
+        { id: '5', teamId: '2', number: 2, firstName: 'Klaus', lastName: 'Weber' },
+      ],
+    },
+    {
+      id: '3',
+      name: 'Team Charlie',
+      contactEmail: null,
+      teamMemberCount: 0,
+      tournamentRegistration: {
+        registrationDate: '2025-03-03',
+        paymentDate: null,
+        arrivalDate: null,
+      },
       members: [],
-    })
-    newTeamName.value = ''
-    selectedTeamIndex.value = store.teamsWithMembers.length - 1
+    },
+    {
+      id: '4',
+      name: 'Team Delta',
+      contactEmail: null,
+      teamMemberCount: 0,
+      tournamentRegistration: {
+        registrationDate: '2025-03-03',
+        paymentDate: null,
+        arrivalDate: '2025-03-05',
+      },
+      members: [],
+    },
+  ])
+
+  function openMail (email: string) {
+    const a = document.createElement('a')
+    a.href = `mailto:${email}`
+    a.click()
   }
 
-  function removeTeam (index: number) {
-    store.teamsWithMembers.splice(index, 1)
-    if (selectedTeamIndex.value === index) selectedTeamIndex.value = null
-    else if (selectedTeamIndex.value !== null && selectedTeamIndex.value > index) {
-      selectedTeamIndex.value--
-    }
-  }
-
-  // ── Team bearbeiten Dialog ─────────────────────────
-  const teamEditDialog = ref(false)
-  const teamEditIndex = ref<number | null>(null)
-  const teamEditBuffer = ref({
-    name: '',
-    contactEmail: '',
-    teamMemberCount: undefined as number | undefined,
-  })
-
-  function openTeamEdit (index: number) {
-    const team = store.teamsWithMembers[index]
-    if (!team) return
-    teamEditIndex.value = index
-    teamEditBuffer.value = {
-      name: team.name!,
-      contactEmail: team.contactEmail ?? '',
-      teamMemberCount: team.teamMemberCount!,
-    }
-    teamEditDialog.value = true
-  }
-
-  function saveTeamEdit () {
-    if (teamEditIndex.value === null) return
-    const team = store.teamsWithMembers[teamEditIndex.value]
-    if (!team) return
-    team.name = teamEditBuffer.value.name.trim()
-    team.contactEmail = teamEditBuffer.value.contactEmail?.trim() || undefined
-    team.teamMemberCount = teamEditBuffer.value.teamMemberCount
-    teamEditDialog.value = false
-  }
-
-  // ── Schützen ───────────────────────────────────────
-  const newArcher = ref({ number: '', firstName: '', lastName: '' })
-
-  const canAddArcher = computed(() =>
-    newArcher.value.number !== ''
-    && newArcher.value.firstName.trim() !== ''
-    && newArcher.value.lastName.trim() !== '',
-  )
-
-  function addArcher () {
-    if (!canAddArcher.value || selectedTeamIndex.value === null) return
-    const team = store.teamsWithMembers[selectedTeamIndex.value]
-    if (!team) return
-    team.members.push({
-      id: crypto.randomUUID(),
-      teamId: '',
-      number: Number(newArcher.value.number),
-      firstName: newArcher.value.firstName.trim(),
-      lastName: newArcher.value.lastName.trim(),
-    })
-    newArcher.value = { number: '', firstName: '', lastName: '' }
-  }
-
-  function removeArcher (index: number) {
-    if (selectedTeamIndex.value === null) return
-    const team = store.teamsWithMembers[selectedTeamIndex.value]
-    if (!team) return
-    team.members.splice(index, 1)
-  }
-
-  // ── Inline Edit Schützen ───────────────────────────
-  const editingIndex = ref<number | null>(null)
-  const editBuffer = ref({ localId: '', number: '', firstName: '', lastName: '' })
-
-  function startEdit (index: number, archer: TeamMember) {
-    editingIndex.value = index
-    editBuffer.value = {
-      localId: archer.id,
-      number: String(archer.number),
-      firstName: archer.firstName!,
-      lastName: archer.lastName!,
-    }
-  }
-
-  function saveEdit (index: number) {
-    if (selectedTeamIndex.value === null) return
-    const team = store.teamsWithMembers[selectedTeamIndex.value]
-    if (!team) return
-    team.members[index] = {
-      id: editBuffer.value.localId,
-      teamId: '',
-      number: Number(editBuffer.value.number),
-      firstName: editBuffer.value.firstName.trim(),
-      lastName: editBuffer.value.lastName.trim(),
-    }
-    editingIndex.value = null
-  }
 </script>
 
 <style scoped>
-.team-item {
-  border: 1px solid transparent;
-  transition: all 0.15s ease;
+.team-card {
+  outline: 2px solid transparent;
+  transition: outline-color 0.2s ease;
 }
-
-.team-item--active {
-  border-color: rgb(var(--v-theme-secondary), 0.4);
+.team-card:hover {
+  outline-color: rgba(var(--v-theme-secondary), 0.4);
+}
+.team-card.selected {
+  outline-color: rgba(var(--v-theme-secondary), 0.9);
 }
 </style>
