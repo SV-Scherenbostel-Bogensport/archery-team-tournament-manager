@@ -28,9 +28,9 @@
             </v-card-title>
 
             <div style="max-height: 50vh; overflow-y: auto;">
-              <div v-if="teams.length > 0" class="d-flex flex-column ga-2 pa-3">
+              <div v-if="store.teams.length > 0" class="d-flex flex-column ga-2 pa-3">
                 <v-card
-                  v-for="(team, index) in teams"
+                  v-for="(team, index) in store.teams"
                   :key="team.id"
                   :class="['team-card cursor-pointer transition-swing pa-1', { selected: selectedTeam?.id === team.id }]"
                   :color="selectedTeam?.id === team.id ? 'secondary' : 'background'"
@@ -227,8 +227,8 @@
               <template v-else>
                 <div v-if="selectedTeam.members?.length" class="d-flex flex-column ga-2 pa-3">
                   <v-card
-                    v-for="(member, index) in sortedMembers"
-                    :key="index"
+                    v-for="(member) in sortedMembers"
+                    :key="member.id"
                     class="pa-1 team-card"
                     color="background"
                     style="cursor: pointer;"
@@ -475,7 +475,7 @@
       </v-card-title>
 
       <v-card-text class="pa-4">
-        Soll dieser Schütze wirklich aus dem Team entfernen werden?
+        Soll dieser Schütze wirklich aus dem Team entfernt werden?
       </v-card-text>
 
       <v-card-actions>
@@ -499,72 +499,15 @@
 
 <script setup lang="ts">
   import type { TeamWithMembers } from '@/types'
-  import { ref } from 'vue'
+  import { useTournamentStore } from '@/stores/tournamentStore'
 
   defineEmits(['next'])
   const isValid = ref(true)
   defineExpose({ isValid })
 
-  const selectedTeam = ref<TeamWithMembers | null>(null)
+  const store = useTournamentStore()
 
-  const teams = reactive<TeamWithMembers[]>([
-    {
-      id: '1',
-      name: 'Team Alpha',
-      contactEmail: 'alpha@test.de',
-      expectedMembers: null,
-      tournamentRegistration: {
-        registrationDate: '2025-03-01',
-        paymentDate: '2025-03-05',
-        arrivalDate: '2025-03-05',
-        note: 'test ',
-      },
-      members: [
-        { id: '1', teamId: '1', number: 1, firstName: 'Max', lastName: 'Mustermann' },
-        { id: '2', teamId: '1', number: 2, firstName: 'Erika', lastName: 'Musterfrau' },
-        { id: '3', teamId: '1', number: 3, firstName: 'Hans', lastName: 'Schmidt' },
-      ],
-    },
-    {
-      id: '2',
-      name: 'Team Bravo',
-      contactEmail: 'bravo@test.de',
-      expectedMembers: 4,
-      tournamentRegistration: {
-        registrationDate: '2025-03-02',
-        paymentDate: null,
-        arrivalDate: null,
-      },
-      members: [
-        { id: '4', teamId: '2', number: 1, firstName: 'Lisa', lastName: 'Meier' },
-        { id: '5', teamId: '2', number: 2, firstName: 'Klaus', lastName: 'Weber' },
-      ],
-    },
-    {
-      id: '3',
-      name: 'Team Charlie',
-      contactEmail: null,
-      expectedMembers: 0,
-      tournamentRegistration: {
-        registrationDate: '2025-03-03',
-        paymentDate: null,
-        arrivalDate: null,
-      },
-      members: [],
-    },
-    {
-      id: '4',
-      name: 'Team Delta',
-      contactEmail: null,
-      expectedMembers: 0,
-      tournamentRegistration: {
-        registrationDate: '2025-03-03',
-        paymentDate: null,
-        arrivalDate: '2025-03-05',
-      },
-      members: [],
-    },
-  ])
+  const selectedTeam = ref<TeamWithMembers | null>(null)
 
   const rules = {
     required: (value: any) => !!value || 'Erforderlich.',
@@ -586,8 +529,7 @@
   })
 
   const sortedMembers = computed(() =>
-    (selectedTeam.value?.members ?? [])
-      .toSorted((a, b) => a.number - b.number),
+    (selectedTeam.value?.members ?? []).toSorted((a, b) => a.number - b.number),
   )
 
   // ===== Team Dialog =====
@@ -607,7 +549,7 @@
   function saveTeam () {
     if (!teamForm.name) return
     if (editingTeam.value) {
-      const t = teams.find(t => t.id === editingTeam.value!.id)
+      const t = store.teams.find(t => t.id === editingTeam.value!.id)
       if (t) {
         t.name = teamForm.name
         t.contactEmail = teamForm.contactEmail || null
@@ -625,7 +567,7 @@
         tournamentRegistration: { registrationDate: new Date().toISOString(), paymentDate: null, arrivalDate: null, note: teamForm.note || undefined },
         members: [],
       }
-      teams.push(newTeam)
+      store.teams.push(newTeam)
     }
     showTeamDialog.value = false
   }
@@ -645,8 +587,8 @@
   }
 
   function confirmDeleteTeam () {
-    const idx = teams.findIndex(t => t.id === teamToDelete.value?.id)
-    if (idx !== -1) teams.splice(idx, 1)
+    const idx = store.teams.findIndex(t => t.id === teamToDelete.value?.id)
+    if (idx !== -1) store.teams.splice(idx, 1)
     if (selectedTeam.value?.id === teamToDelete.value?.id) selectedTeam.value = null
     showDeleteTeamDialog.value = false
   }

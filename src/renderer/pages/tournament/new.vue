@@ -12,7 +12,7 @@
         <TournamentTeamEdit ref="step3Ref" />
       </template>
       <template #item.4>
-        <TournamentCreationOverview ref="step4Ref" />
+        <TournamentCreationOverview ref="step4Ref" @edit-step="handleEditStep" />
       </template>
 
       <template #actions>
@@ -115,8 +115,10 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import TournamentCreationOverview from '@/components/tournament/TournamentCreationOverview.vue'
   import TournamentGeneralDataEdit from '@/components/tournament/TournamentGeneralDataEdit.vue'
   import TournamentModeSelection from '@/components/tournament/TournamentModeSelection.vue'
+  import TournamentTeamEdit from '@/components/tournament/TournamentTeamEdit.vue'
 
   const router = useRouter()
   const activeStep = ref(1)
@@ -153,6 +155,10 @@
       }
     }
   })
+
+  function handleEditStep (stepIndex: number) {
+    activeStep.value = stepIndex + 1
+  }
 
   const showCancelDialog = ref(false)
 

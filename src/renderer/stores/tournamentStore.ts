@@ -1,7 +1,6 @@
 import type { Stage, TargetFace, Team, TeamWithMembers } from '@/types'
 import { defineStore } from 'pinia'
 
-// Interface speziell für Step 1
 export interface TournamentGeneralData {
   name: string
   description: string
@@ -10,7 +9,7 @@ export interface TournamentGeneralData {
   email: string
   date: string | null
   startTime: string | null
-  maxSlots?: number
+  maxSlots: number | undefined
   registrationDeadline: string | null
   allowRegistration: boolean
   primaryColor: string
@@ -18,13 +17,12 @@ export interface TournamentGeneralData {
   documents: File[]
 }
 
-// FIX: TournamentState muss ALLE Felder enthalten, die im State vorkommen
 interface TournamentState {
   general: TournamentGeneralData
   competition: {
     mode: string | null
   }
-  teamsWithMembers: TeamWithMembers[]
+  teams: TeamWithMembers[]
   stages: Stage[]
   selectedTeams: Team[]
   targetFaces: TargetFace[]
@@ -32,28 +30,31 @@ interface TournamentState {
   isLoadingTargetFaces: boolean
 }
 
-export const useTournamentStore = defineStore('tournament', {
+function defaultGeneral (): TournamentGeneralData {
+  return {
+    name: '',
+    description: '',
+    location: '',
+    address: '',
+    email: '',
+    date: null,
+    startTime: null,
+    maxSlots: undefined,
+    registrationDeadline: null,
+    allowRegistration: false,
+    primaryColor: '',
+    secondaryColor: '',
+    documents: [],
+  }
+}
 
+export const useTournamentStore = defineStore('tournament', {
   state: (): TournamentState => ({
-    general: {
-      name: '',
-      description: '',
-      location: '',
-      address: '',
-      email: '',
-      date: null,
-      startTime: null,
-      maxSlots: undefined,
-      registrationDeadline: null,
-      allowRegistration: false,
-      primaryColor: '',
-      secondaryColor: '',
-      documents: [],
-    },
-    teamsWithMembers: [],
+    general: defaultGeneral(),
     competition: {
-      mode: '' as string | null,
+      mode: null,
     },
+    teams: [],
     stages: [],
     selectedTeams: [],
     targetFaces: [],
@@ -61,28 +62,17 @@ export const useTournamentStore = defineStore('tournament', {
     isLoadingTargetFaces: false,
   }),
 
-  actions: {
+  getters: {
+    totalMembers: state => state.teams.reduce((acc, t) => acc + t.members.length, 0),
+    paidTeams: state => state.teams.filter(t => t.tournamentRegistration.paymentDate),
+    arrivedTeams: state => state.teams.filter(t => t.tournamentRegistration.arrivalDate),
+  },
 
+  actions: {
     resetForm () {
-      this.general = {
-        name: '',
-        description: '',
-        location: '',
-        address: '',
-        email: '',
-        date: null,
-        startTime: null,
-        maxSlots: undefined,
-        registrationDeadline: null,
-        allowRegistration: false,
-        primaryColor: '',
-        secondaryColor: '',
-        documents: [],
-      }
-      this.teamsWithMembers = []
-      this.competition = {
-        mode: '',
-      }
+      this.general = defaultGeneral()
+      this.teams = []
+      this.competition = { mode: null }
       this.stages = []
       this.selectedTeams = []
     },
@@ -95,9 +85,8 @@ export const useTournamentStore = defineStore('tournament', {
       this.stages.splice(index, 1)
     },
 
-    /**
-     * Sendet das komplette Turnier an das Backend
-     */
-    async createTournament () {},
+    async createTournament () {
+      // TODO: POST to backend
+    },
   },
 })
