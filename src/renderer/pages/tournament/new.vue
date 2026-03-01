@@ -79,22 +79,34 @@
       </template>
     </v-stepper>
 
-    <v-dialog v-model="showCancelDialog" max-width="490">
-      <v-card
-        text="Möchten Sie wirklich die Turniererstellung abbrechen? Alle Änderungen gehen verloren."
-        title="Turniererstellung abbrechen?"
-      >
+    <v-dialog v-model="showCancelDialog" max-width="500">
+
+      <v-card>
+        <v-card-title class="d-flex align-center ga-2 pa-4 pb-2">
+          <v-icon color="error" icon="mdi-trophy-broken" />
+          Turniererstellung abbrechen?
+        </v-card-title>
+
+        <v-card-text class="pa-4">
+          Möchten Sie wirklich die Turniererstellung abbrechen?<br>
+          Alle Änderungen gehen verloren.
+        </v-card-text>
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="showCancelDialog = false">
+          <v-btn color="grey" text="Abbrechen" variant="text" @click="showCancelDialog = false">
             Weiter erstellen
           </v-btn>
-          <v-btn color="error" @click="confirmCancel">
-            Erstellung abbrechen
-          </v-btn>
+          <v-btn
+            color="error"
+            prepend-icon="mdi-cancel"
+            text="Erstellung abbrechen"
+            variant="tonal"
+            @click="confirmCancel"
+          />
         </v-card-actions>
       </v-card>
+
     </v-dialog>
 
   </v-container>

@@ -3,5 +3,5 @@ export interface Team {
   tournamentId: string
   name?: string | null
   contactEmail?: string | null
-  teamMemberCount?: number | null
+  expectedMembers?: number | null
 }

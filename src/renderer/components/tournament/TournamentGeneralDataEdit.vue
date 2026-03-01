@@ -157,6 +157,7 @@
               clearable
               color="secondary"
               control-variant="default"
+              inset
               label="Max. Startplätze"
               :max="1000"
               :min="1"
